@@ -1,0 +1,40 @@
+name: dulcehora
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.10.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Firebase
+  firebase_core: ^3.8.1
+  cloud_firestore: ^5.5.0
+  firebase_auth: ^5.3.3
+  
+  # Authentication
+  google_sign_in: ^6.2.2
+  
+  # State Management & DI
+  provider: ^6.1.2
+  
+  # Utilities
+  intl: ^0.19.0
+  
+  # Image Handling
+  image_picker: ^1.1.2
+  cached_network_image: ^3.4.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/images/

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "111954636874",
+    "project_id": "dulcehora",
+    "storage_bucket": "dulcehora.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:111954636874:android:f3b9a49ffdb4e29c2cb6b3",
+        "android_client_info": {
+          "package_name": "com.example.dulcehora"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCm7EGm_5MQY6oLU0nlTX8NpfSCwps7J0A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
