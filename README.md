@@ -6,7 +6,7 @@ Aplicación móvil Android para "DulceHora", una pastelería que permite a los c
 
 ## Estado Actual del Proyecto
 
-✅ **Infraestructura Completa** - La arquitectura base está implementada y lista para desarrollo de UI
+**Infraestructura Completa** - La arquitectura base está implementada y lista para desarrollo de UI
 
 ### Componentes Implementados
 

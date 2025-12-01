@@ -49,6 +49,15 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  /// Check authentication status and load user data if authenticated
+  Future<void> checkAuthStatus() async {
+    final firebaseUser = await _authService.getCurrentUser();
+    if (firebaseUser != null) {
+      _currentUser = firebaseUser;
+      notifyListeners();
+    }
+  }
+
   /// Sign in with email and password
   Future<bool> signInWithEmail(String email, String password) async {
     _isLoading = true;
@@ -68,6 +77,7 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
       return false;
     } catch (e) {
+      debugPrint('Error in signInWithEmail: $e');
       _errorMessage = _getErrorMessage(e);
       _isLoading = false;
       notifyListeners();
@@ -94,6 +104,7 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
       return false;
     } catch (e) {
+      debugPrint('Error in signInWithGoogle: $e');
       _errorMessage = _getErrorMessage(e);
       _isLoading = false;
       notifyListeners();
@@ -142,6 +153,7 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
       return false;
     } catch (e) {
+      debugPrint('Error in registerWithEmail: $e');
       _errorMessage = _getErrorMessage(e);
       _isLoading = false;
       notifyListeners();
@@ -191,6 +203,8 @@ class AuthProvider with ChangeNotifier {
 
   /// Get user-friendly error message
   String _getErrorMessage(dynamic error) {
+    debugPrint('Processing error: ${error.runtimeType} - $error');
+
     if (error is firebase_auth.FirebaseAuthException) {
       switch (error.code) {
         case 'user-not-found':
@@ -203,10 +217,26 @@ class AuthProvider with ChangeNotifier {
           return 'La contraseña es muy débil';
         case 'invalid-email':
           return 'Correo electrónico inválido';
+        case 'invalid-credential':
+          return 'Credenciales inválidas';
+        case 'user-disabled':
+          return 'Esta cuenta ha sido deshabilitada';
+        case 'too-many-requests':
+          return 'Demasiados intentos. Intente más tarde';
+        case 'operation-not-allowed':
+          return 'Operación no permitida';
         default:
-          return 'Error de autenticación';
+          debugPrint('Unhandled Firebase error code: ${error.code}');
+          return 'Error de autenticación: ${error.message ?? error.code}';
       }
     }
-    return 'Error desconocido';
+
+    // Handle generic exceptions by extracting the message
+    final errorString = error.toString();
+    if (errorString.startsWith('Exception: ')) {
+      return errorString.substring(11); // Remove 'Exception: ' prefix
+    }
+
+    return 'Error desconocido: $errorString';
   }
 }

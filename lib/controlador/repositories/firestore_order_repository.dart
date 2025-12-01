@@ -15,7 +15,12 @@ class FirestoreOrderRepository implements IOrderRepository {
   @override
   Future<String> createOrder(Order order) async {
     try {
+      // Create document and get Firestore-generated ID
       final docRef = await _collection.add(order.toJson());
+
+      // Update the document with the correct ID
+      await docRef.update({'id': docRef.id});
+
       return docRef.id;
     } catch (e) {
       throw Exception('Error creating order: $e');

@@ -6,6 +6,7 @@ import '../widgets/product_card.dart';
 import '../widgets/category_chip.dart';
 import '../widgets/loading_indicator.dart';
 import '../widgets/error_display.dart';
+import '../widgets/occasion_recommendations.dart';
 import 'product_detail_screen.dart';
 
 /// Product catalog screen with filtering and search
@@ -64,62 +65,78 @@ class _CatalogScreenState extends State<CatalogScreen> {
             );
           }
 
-          return Column(
-            children: [
+          return CustomScrollView(
+            slivers: [
               // Search Bar
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: 'Buscar productos...',
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: _searchController.text.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              _searchController.clear();
-                              productProvider.setSearchQuery('');
-                            },
-                          )
-                        : null,
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Buscar productos...',
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: _searchController.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                _searchController.clear();
+                                productProvider.setSearchQuery('');
+                              },
+                            )
+                          : null,
+                    ),
+                    onChanged: (value) {
+                      productProvider.setSearchQuery(value);
+                    },
                   ),
-                  onChanged: (value) {
-                    productProvider.setSearchQuery(value);
-                  },
                 ),
               ),
 
               // Category Filters
-              SizedBox(
-                height: 50,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  children: [
-                    CategoryChip(
-                      label: 'Todos',
-                      isSelected: productProvider.selectedCategory == null,
-                      onTap: () => productProvider.setCategory(null),
-                    ),
-                    ...productProvider.categories.map(
-                      (category) => CategoryChip(
-                        label: category,
-                        isSelected:
-                            productProvider.selectedCategory == category,
-                        onTap: () => productProvider.setCategory(category),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 50,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    children: [
+                      CategoryChip(
+                        label: 'Todos',
+                        isSelected: productProvider.selectedCategory == null,
+                        onTap: () => productProvider.setCategory(null),
                       ),
-                    ),
-                  ],
+                      ...productProvider.categories.map(
+                        (category) => CategoryChip(
+                          label: category,
+                          isSelected:
+                              productProvider.selectedCategory == category,
+                          onTap: () => productProvider.setCategory(category),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
-              const SizedBox(height: 8),
+              const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
-              // Products Grid
-              Expanded(
-                child: productProvider.products.isEmpty
-                    ? Center(
+              // Occasion Recommendations
+              if (_searchController.text.isEmpty &&
+                  productProvider.selectedCategory == null)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: OccasionRecommendations(
+                      products: productProvider.allProducts,
+                    ),
+                  ),
+                ),
+
+              // Product Grid
+              productProvider.products.isEmpty
+                  ? SliverFillRemaining(
+                      child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -144,44 +161,44 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             ),
                           ],
                         ),
-                      )
-                    : RefreshIndicator(
-                        onRefresh: () => productProvider.refresh(),
-                        child: GridView.builder(
-                          padding: const EdgeInsets.all(16),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 0.7,
-                                crossAxisSpacing: 16,
-                                mainAxisSpacing: 16,
-                              ),
-                          itemCount: productProvider.products.length,
-                          itemBuilder: (context, index) {
-                            final product = productProvider.products[index];
-                            return ProductCard(
-                              product: product,
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) =>
-                                        ProductDetailScreen(product: product),
-                                  ),
-                                );
-                              },
-                              onAddToCart: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) =>
-                                        ProductDetailScreen(product: product),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
                       ),
-              ),
+                    )
+                  : SliverPadding(
+                      padding: const EdgeInsets.all(12),
+                      sliver: SliverGrid(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.75,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                            ),
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          final product = productProvider.products[index];
+                          return ProductCard(
+                            product: product,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      ProductDetailScreen(product: product),
+                                ),
+                              );
+                            },
+                            onAddToCart: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      ProductDetailScreen(product: product),
+                                ),
+                              );
+                            },
+                          );
+                        }, childCount: productProvider.products.length),
+                      ),
+                    ),
+
+              const SliverToBoxAdapter(child: SizedBox(height: 24)),
             ],
           );
         },

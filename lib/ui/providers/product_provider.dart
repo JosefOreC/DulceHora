@@ -16,6 +16,7 @@ class ProductProvider with ChangeNotifier {
   String? _errorMessage;
 
   List<Product> get products => _filteredProducts;
+  List<Product> get allProducts => _products; // All products without filters
   List<String> get categories => _categories;
   String? get selectedCategory => _selectedCategory;
   String get searchQuery => _searchQuery;

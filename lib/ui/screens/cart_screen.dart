@@ -15,7 +15,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currencyFormat = NumberFormat.currency(
-      symbol: '\$',
+      symbol: 'S/',
       decimalDigits: 2,
     );
 
@@ -292,8 +292,8 @@ class CartScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Impuesto (13%):'),
-                          Text(currencyFormat.format(cart.tax)),
+                          const Text('IGV (18%):'),
+                          Text(currencyFormat.format(cart.igv)),
                         ],
                       ),
                       const Divider(height: 16),

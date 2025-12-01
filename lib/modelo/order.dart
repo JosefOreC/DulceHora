@@ -6,6 +6,11 @@ class Order {
   final String userId;
   final String productId;
   final String productName; // Denormalized for easier display
+  final String
+  selectedSize; // Size selected (e.g., "Pequeño", "Mediano", "Grande")
+  final String
+  selectedFlavor; // Flavor selected (e.g., "Chocolate", "Vainilla")
+  final int quantity; // Quantity ordered
   final Customization customization;
   final DateTime deliveryDate;
   final String pickupTime; // e.g., "10:00 AM - 11:00 AM"
@@ -24,6 +29,9 @@ class Order {
     required this.userId,
     required this.productId,
     required this.productName,
+    required this.selectedSize,
+    required this.selectedFlavor,
+    required this.quantity,
     required this.customization,
     required this.deliveryDate,
     required this.pickupTime,
@@ -45,6 +53,9 @@ class Order {
       'userId': userId,
       'productId': productId,
       'productName': productName,
+      'selectedSize': selectedSize,
+      'selectedFlavor': selectedFlavor,
+      'quantity': quantity,
       'customization': customization.toJson(),
       'deliveryDate': deliveryDate.toIso8601String(),
       'pickupTime': pickupTime,
@@ -67,6 +78,9 @@ class Order {
       userId: json['userId'] as String,
       productId: json['productId'] as String,
       productName: json['productName'] as String,
+      selectedSize: json['selectedSize'] as String,
+      selectedFlavor: json['selectedFlavor'] as String,
+      quantity: json['quantity'] as int,
       customization: Customization.fromJson(
         json['customization'] as Map<String, dynamic>,
       ),
@@ -94,6 +108,9 @@ class Order {
     String? userId,
     String? productId,
     String? productName,
+    String? selectedSize,
+    String? selectedFlavor,
+    int? quantity,
     Customization? customization,
     DateTime? deliveryDate,
     String? pickupTime,
@@ -112,6 +129,9 @@ class Order {
       userId: userId ?? this.userId,
       productId: productId ?? this.productId,
       productName: productName ?? this.productName,
+      selectedSize: selectedSize ?? this.selectedSize,
+      selectedFlavor: selectedFlavor ?? this.selectedFlavor,
+      quantity: quantity ?? this.quantity,
       customization: customization ?? this.customization,
       deliveryDate: deliveryDate ?? this.deliveryDate,
       pickupTime: pickupTime ?? this.pickupTime,

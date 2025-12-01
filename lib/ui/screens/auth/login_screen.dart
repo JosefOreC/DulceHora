@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../config/app_colors.dart';
+import '../../../modelo/user.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
+import '../home_screen.dart';
+import '../employee/baker_calendar_screen.dart';
+import '../employee/order_management_screen.dart';
+import '../employee/price_management_screen.dart';
+import '../employee/demand_reports_screen.dart';
 import 'register_screen.dart';
 
 /// Login screen with email/password and Google Sign-In
@@ -37,7 +43,35 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (success && mounted) {
-      Navigator.of(context).pop();
+      // Navigate based on user role
+      final user = authProvider.currentUser;
+      Widget destination;
+
+      if (user != null) {
+        switch (user.role) {
+          case UserRole.pastryChef:
+            destination = const BakerCalendarScreen();
+            break;
+          case UserRole.manager:
+            destination = const OrderManagementScreen();
+            break;
+          case UserRole.admin:
+            destination = const PriceManagementScreen();
+            break;
+          case UserRole.analyst:
+            destination = const DemandReportsScreen();
+            break;
+          default:
+            destination = const HomeScreen();
+        }
+      } else {
+        destination = const HomeScreen();
+      }
+
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => destination),
+        (route) => false,
+      );
     } else if (mounted && authProvider.errorMessage != null) {
       ScaffoldMessenger.of(
         context,
@@ -50,7 +84,35 @@ class _LoginScreenState extends State<LoginScreen> {
     final success = await authProvider.signInWithGoogle();
 
     if (success && mounted) {
-      Navigator.of(context).pop();
+      // Navigate based on user role
+      final user = authProvider.currentUser;
+      Widget destination;
+
+      if (user != null) {
+        switch (user.role) {
+          case UserRole.pastryChef:
+            destination = const BakerCalendarScreen();
+            break;
+          case UserRole.manager:
+            destination = const OrderManagementScreen();
+            break;
+          case UserRole.admin:
+            destination = const PriceManagementScreen();
+            break;
+          case UserRole.analyst:
+            destination = const DemandReportsScreen();
+            break;
+          default:
+            destination = const HomeScreen();
+        }
+      } else {
+        destination = const HomeScreen();
+      }
+
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => destination),
+        (route) => false,
+      );
     } else if (mounted && authProvider.errorMessage != null) {
       ScaffoldMessenger.of(
         context,

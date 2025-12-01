@@ -32,8 +32,9 @@ class FirebaseAuthService implements IAuthService {
 
       // Fetch user data from Firestore
       return await _userRepository.getUserById(credential.user!.uid);
-    } on firebase_auth.FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
+    } on firebase_auth.FirebaseAuthException {
+      // Re-throw FirebaseAuthException to preserve error codes
+      rethrow;
     } catch (e) {
       throw Exception('Error signing in: $e');
     }
@@ -85,8 +86,9 @@ class FirebaseAuthService implements IAuthService {
       }
 
       return existingUser;
-    } on firebase_auth.FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
+    } on firebase_auth.FirebaseAuthException {
+      // Re-throw FirebaseAuthException to preserve error codes
+      rethrow;
     } catch (e) {
       throw Exception('Error signing in with Google: $e');
     }
@@ -133,8 +135,9 @@ class FirebaseAuthService implements IAuthService {
       await _userRepository.createUser(newUser);
 
       return newUser;
-    } on firebase_auth.FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
+    } on firebase_auth.FirebaseAuthException {
+      // Re-throw FirebaseAuthException to preserve error codes
+      rethrow;
     } catch (e) {
       throw Exception('Error al registrarse: $e');
     }
@@ -188,8 +191,9 @@ class FirebaseAuthService implements IAuthService {
   Future<void> sendPasswordResetEmail(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
-    } on firebase_auth.FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
+    } on firebase_auth.FirebaseAuthException {
+      // Re-throw FirebaseAuthException to preserve error codes
+      rethrow;
     } catch (e) {
       throw Exception('Error sending password reset email: $e');
     }
@@ -204,34 +208,11 @@ class FirebaseAuthService implements IAuthService {
       }
 
       await user.updatePassword(newPassword);
-    } on firebase_auth.FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
+    } on firebase_auth.FirebaseAuthException {
+      // Re-throw FirebaseAuthException to preserve error codes
+      rethrow;
     } catch (e) {
       throw Exception('Error updating password: $e');
-    }
-  }
-
-  /// Handle Firebase Auth exceptions with user-friendly messages
-  Exception _handleAuthException(firebase_auth.FirebaseAuthException e) {
-    switch (e.code) {
-      case 'user-not-found':
-        return Exception('No se encontró ningún usuario con este correo');
-      case 'wrong-password':
-        return Exception('Contraseña incorrecta');
-      case 'email-already-in-use':
-        return Exception('El correo electrónico ya está en uso');
-      case 'invalid-email':
-        return Exception('Correo electrónico inválido');
-      case 'weak-password':
-        return Exception('La contraseña es demasiado débil');
-      case 'user-disabled':
-        return Exception('Esta cuenta ha sido deshabilitada');
-      case 'too-many-requests':
-        return Exception('Demasiados intentos. Intente más tarde');
-      case 'operation-not-allowed':
-        return Exception('Operación no permitida');
-      default:
-        return Exception('Error de autenticación: ${e.message}');
     }
   }
 }

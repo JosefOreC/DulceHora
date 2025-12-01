@@ -5,8 +5,10 @@ import '../../modelo/product.dart';
 import '../../modelo/customization.dart';
 import '../../config/app_colors.dart';
 import '../providers/cart_provider.dart';
+import '../providers/auth_provider.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
+import '../widgets/employee_drawer.dart';
 
 /// Product detail screen with customization options
 class ProductDetailScreen extends StatefulWidget {
@@ -100,7 +102,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
+    final isEmployee = authProvider.isEmployee;
+
     return Scaffold(
+      drawer: isEmployee ? const EmployeeDrawer() : null,
       body: CustomScrollView(
         slivers: [
           // App Bar with Image
@@ -212,7 +218,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       return ChoiceChip(
                         label: Text(
                           extraPrice > 0
-                              ? '$flavor (+\$${extraPrice.toStringAsFixed(2)})'
+                              ? '$flavor (+S/${extraPrice.toStringAsFixed(2)})'
                               : flavor,
                         ),
                         selected: _selectedFlavor == flavor,
@@ -351,7 +357,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 children: [
                   Text('Total', style: Theme.of(context).textTheme.bodySmall),
                   Text(
-                    '\$${_currentPrice.toStringAsFixed(2)}',
+                    'S/${_currentPrice.toStringAsFixed(2)}',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       color: AppColors.primary,
                       fontWeight: FontWeight.bold,

@@ -13,9 +13,9 @@ class CartProvider with ChangeNotifier {
 
   double get subtotal => _items.fold(0.0, (sum, item) => sum + item.totalPrice);
 
-  double get tax => subtotal * 0.13; // 13% tax
+  double get igv => subtotal * 0.18; // 18% IGV (Peru)
 
-  double get total => subtotal + tax;
+  double get total => subtotal + igv;
 
   bool get isEmpty => _items.isEmpty;
 

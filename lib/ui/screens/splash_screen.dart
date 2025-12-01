@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/app_colors.dart';
+import '../../modelo/user.dart';
 import '../providers/product_provider.dart';
+import '../providers/auth_provider.dart';
 import 'home_screen.dart';
+import 'employee/baker_calendar_screen.dart';
+import 'employee/order_management_screen.dart';
+import 'employee/price_management_screen.dart';
+import 'employee/demand_reports_screen.dart';
 
 /// Splash screen with branding and initialization
 class SplashScreen extends StatefulWidget {
@@ -48,9 +54,45 @@ class _SplashScreenState extends State<SplashScreen>
     await Future.delayed(const Duration(milliseconds: 2000));
 
     if (mounted) {
+      // Check authentication status and load user data
+      final authProvider = context.read<AuthProvider>();
+      await authProvider.checkAuthStatus();
+
+      final user = authProvider.currentUser;
+
+      Widget destination;
+
+      if (user != null) {
+        // Navigate based on user role
+        switch (user.role) {
+          case UserRole.pastryChef:
+            // HU-E1: Pastelero → Calendario de producción
+            destination = const BakerCalendarScreen();
+            break;
+          case UserRole.manager:
+            // HU-E2: Encargado → Gestión de pedidos
+            destination = const OrderManagementScreen();
+            break;
+          case UserRole.admin:
+            // HU-E3: Admin → Gestión de precios (con acceso a todo)
+            destination = const PriceManagementScreen();
+            break;
+          case UserRole.analyst:
+            // HU-E4: Gestor → Reportes de demanda
+            destination = const DemandReportsScreen();
+            break;
+          default:
+            // Customers and others → Home screen (catalog)
+            destination = const HomeScreen();
+        }
+      } else {
+        // Not logged in → Home screen (catalog)
+        destination = const HomeScreen();
+      }
+
       Navigator.of(
         context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
+      ).pushReplacement(MaterialPageRoute(builder: (_) => destination));
     }
   }
 
