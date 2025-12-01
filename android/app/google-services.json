@@ -12,7 +12,20 @@
           "package_name": "com.example.dulcehora"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "111954636874-3jmbtsk6jp5uos4tbu8vt2rsdtfl3lgl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dulcehora",
+            "certificate_hash": "3a523ba7fa68b2d2b86b92f68a3205cfc5f469af"
+          }
+        },
+        {
+          "client_id": "111954636874-3vs5ag1107ngc2unhjos4pc64bk32vmd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCm7EGm_5MQY6oLU0nlTX8NpfSCwps7J0A"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "111954636874-3vs5ag1107ngc2unhjos4pc64bk32vmd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "111954636874-7lnkth8tc1fvrlt4l5q9949vup54lsp8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.dulcehora"
+              }
+            }
+          ]
         }
       }
     }
